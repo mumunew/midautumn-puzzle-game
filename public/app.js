@@ -202,6 +202,7 @@
   }
 
   function setupDraggable(piece) {
+    // 桌面端拖拽事件
     piece.addEventListener('dragstart', (e) => {
       state.draggedPiece = piece;
       piece.classList.add('dragging');
@@ -211,6 +212,108 @@
     piece.addEventListener('dragend', (e) => {
       piece.classList.remove('dragging');
       state.draggedPiece = null;
+    });
+
+    // 移动端触摸事件
+    let touchStartX, touchStartY;
+    let isDragging = false;
+    let touchClone = null;
+
+    piece.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      
+      state.draggedPiece = piece;
+      piece.classList.add('dragging');
+      piece.classList.add('touch-feedback'); // 添加触摸反馈
+      
+      // 创建拖拽时的视觉反馈
+      touchClone = piece.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.zIndex = '9999';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.opacity = '0.8';
+      touchClone.style.transform = 'scale(1.1)';
+      document.body.appendChild(touchClone);
+      
+      isDragging = true;
+    });
+
+    piece.addEventListener('touchmove', (e) => {
+      if (!isDragging || !touchClone) return;
+      e.preventDefault();
+      
+      const touch = e.touches[0];
+      const rect = touchClone.getBoundingClientRect();
+      touchClone.style.left = (touch.clientX - rect.width / 2) + 'px';
+      touchClone.style.top = (touch.clientY - rect.height / 2) + 'px';
+      
+      // 检测拖拽目标
+      const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      // 移除所有拖拽高亮
+      document.querySelectorAll('.drag-over').forEach(el => {
+        el.classList.remove('drag-over');
+      });
+      
+      // 添加拖拽高亮
+      if (elementBelow) {
+        const cell = elementBelow.closest('.cell');
+        const stash = elementBelow.closest('#pieces');
+        
+        if (cell) {
+          cell.classList.add('drag-over');
+        } else if (stash) {
+          stash.classList.add('drag-over');
+        }
+      }
+    });
+
+    piece.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      
+      const touch = e.changedTouches[0];
+      const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      // 清理拖拽状态
+      piece.classList.remove('dragging');
+      piece.classList.remove('touch-feedback'); // 移除触摸反馈
+      document.querySelectorAll('.drag-over').forEach(el => {
+        el.classList.remove('drag-over');
+      });
+      
+      if (touchClone) {
+        document.body.removeChild(touchClone);
+        touchClone = null;
+      }
+      
+      // 处理放置逻辑
+      if (elementBelow) {
+        const cell = elementBelow.closest('.cell');
+        const stash = elementBelow.closest('#pieces');
+        
+        if (stash && stash === piecesEl) {
+          piecesEl.appendChild(state.draggedPiece);
+        } else if (cell && cell.classList.contains('cell')) {
+          const existing = cell.querySelector('.piece');
+          if (existing) {
+            const draggedParent = state.draggedPiece.parentNode;
+            if (draggedParent === piecesEl) {
+              piecesEl.appendChild(existing);
+            } else {
+              draggedParent.appendChild(existing);
+            }
+          }
+          cell.appendChild(state.draggedPiece);
+          validate();
+        }
+      }
+      
+      state.draggedPiece = null;
+      isDragging = false;
     });
   }
 
