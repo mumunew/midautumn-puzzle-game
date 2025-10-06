@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>拼图游戏</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <audio id="bgm" src="/pic/bgm.mp3" loop></audio>
+  <header class="header">
+    <h1>拼图</h1>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <div class="buttons">
+        <button id="startBtn">挑战开始</button>
+        <button id="restartBtn" disabled>重新开始</button>
+        <button id="changeImgBtn">更换图片</button>
+        <div class="controls">
+        <button id="toggleMusic">开启音乐</button>
+        </div>
+      </div>
+      <div class="status">
+        <span id="timer">用时：00:00</span>
+        <span id="message"></span>
+      </div>
+    </section>
+
+    <section class="game-area">
+      <div class="board" id="board"></div>
+      <div class="stash" id="stash">
+        <h3 style="margin:0 0 8px 0; font-weight:600; color:var(--muted);">暂存区</h3>
+        <div class="pieces" id="pieces"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 10px; color: #FFFF00;">
+    copyright 2025 puzzle.mumulife.net 版权所有
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

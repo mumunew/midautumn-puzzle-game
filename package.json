@@ -1,0 +1,15 @@
+{
+  "name": "puzzle-game-026",
+  "version": "1.0.0",
+  "description": "HTML+CSS+JS 拼图游戏，含 Node.js 后端记录用户日志",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "keywords": ["puzzle", "game", "html", "javascript", "node", "express"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
