@@ -46,7 +46,7 @@
     const levelConfig = challengeLevels[levelNum - 1];
     if (!levelConfig) return;
     
-    state.imageUrl = `/pic/${levelConfig.image}`;
+    state.imageUrl = `pic/${levelConfig.image}`;
     state.grid = levelConfig.grid;
     message.textContent = `第 ${levelNum} 关 - ${levelConfig.grid}x${levelConfig.grid} 拼图`;
     
